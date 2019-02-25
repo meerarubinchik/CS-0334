@@ -1,0 +1,94 @@
+<?php
+  $name = $weight = $height = $bmiEval = $email = $fail = "";
+  $bmi = 0;
+  if (isset($_POST['firstName'])) $name = fix_string($_POST['firstName']);
+  if (isset($_POST['weightL'])) $weight = fix_string($_POST['weightL']);
+  if (isset($_POST['heightI'])) $height = fix_string($_POST['heightI']);
+  if (isset($_POST['emailR'])) $email = fix_string($_POST['emailR']);
+  
+  $fail  = validateName($name);
+  $fail  .= validateWeight($weight);
+  $fail  .= validateHeight($height);
+  $fail  .= validateEmail($email);
+  
+  function validateName($field){
+    return ($field == "") ? "No Firstname was entered<br>" : "";
+  }
+  function validateWeight($field){
+	if ($field == "") return "No Weight was entered<br>";
+    else if ($field <= 0)
+      return "Weight must be a postive number<br>";
+    return "";
+  }
+  function validateHeight($field){
+    if ($field == "") return "No Height was entered<br>";
+    else if ($field <= 0)
+      return "Height must be a postive number<br>";
+    return "";
+  }
+  function validateEmail($field){
+    return ($field == "") ? "No Email was entered<br>" : "";
+  }
+  function fix_string($string){
+    if (get_magic_quotes_gpc()) $string = stripslashes($string);
+    return htmlentities ($string);
+  }
+  
+  if ($fail == ""){
+	$weight = $weight/2.2046; // kg
+	$height = $height*0.0254; // meters
+	$bmi = $height*$height; // m^2
+	$bmi = $weight/$bmi; // kg/(m^2)
+	$bmi = round($bmi, 2);
+	switch(true){
+		case ($bmi > 0 and $bmi < 18.5):
+			$bmiEval = "underweight";
+			break;
+		case ($bmi < 24.9):
+			$bmiEval = "normal";
+			break;
+		case ($bmi < 29.9):
+			$bmiEval = "overweight";
+			break;
+		case ($bmi >= 29.9):
+			$bmiEval = "obese";
+			break;
+		default:
+			$bmiEval = "";
+	}
+	$msgBody = "Your are ";
+	$msgBody .= $bmiEval;
+	$msgBody .= " at BMI: ";
+	$msgBody .= $bmi;
+	$bmiEval = $msgBody;
+	ini_set( 'display_errors', 1 );
+    error_reporting( E_ALL );
+	mail($email,"CS334 Lab5",$msgBody,"From: KAC311@pitt.edu");
+  }
+  
+  
+  echo <<<_END
+  <html>
+    <head>
+      <title>lab5</title>
+    </head>
+    <body>
+    <form method="post" action="lab5.php">
+      First name 
+      <input type="text" name="firstName"><br>
+	  Weight (lbs) 
+      <input type="text" name="weightL"><br>
+	  Height (inches) 
+      <input type="text" name="heightI"><br>
+	  Email 
+      <input type="text" name="emailR"><br>
+	  <br><input type="submit">
+	  <br>$bmiEval<br>
+	  <br>$fail<br><br>
+    </form>
+	<a href="lab5.txt">Click here for source code</a>
+	<br><br><br><br><br>
+    </body>
+  </html>
+_END;
+?>

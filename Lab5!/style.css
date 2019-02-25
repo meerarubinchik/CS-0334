@@ -1,0 +1,38 @@
+
+body{
+	background-color: #EEF0F2;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    
+}
+
+input{
+    display: block;
+	width:25%;
+    height:30px;
+    border-radius: 20px;
+    margin: auto;
+    
+}
+p{
+	color:#1E555C;
+	text-align: center;
+}
+.submit{
+    background-color: #8491A3;
+    color: white;
+    margin: auto;
+    font-size: 120%;
+}
+h1{
+	color:#0DAB76;
+	text-align: center;
+}
+a{
+	display:block;
+	text-align: center;
+}
+form{
+    text-align: center;
+    color: #1E555C;
+    
+}
